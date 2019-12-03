@@ -98,18 +98,23 @@ class Store extends Component
       const formData = new FormData();
 
       // 폼 데이터에 값들 담기!
-      formData.append("file", this.state.file);
-      formData.append("date", timeStamp);
-      formData.append("ID", this.state.userID);
-      formData.append("hash", hash);
-
+      formData.append("file", this.state.file); // 파일 원본
+      formData.append("fileName", this.state.fileInfo.name);  // 파일 이름
+      formData.append("fileSize", this.state.fileInfo.size);  // 파일 크기
+      formData.append("fileType", this.state.fileInfo.type);  // 파일 타입
+      formData.append("date", timeStamp); // 업로드 날짜
+      formData.append("ID", this.state.userID); // 유저 아이디
+      formData.append("hash", hash);  // 해시 값
+      
 
       // 폼 데이터 콘솔로 찍어보기 => 잘 찍힌다
       console.log(formData.get('file'));
+      console.log(formData.get('fileName'));
+      console.log(formData.get('fileSize'));
+      console.log(formData.get('fileType'));
       console.log(formData.get('date'));
       console.log(formData.get('ID'));
       console.log(formData.get('hash'));
-      
 
       fetch(`${constants.URL_BACK}/upload`, {
         method: "POST", // 메소드는 POST

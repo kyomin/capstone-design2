@@ -1,0 +1,165 @@
+@import "../../Style/global.scss";
+
+.read_wrap {
+    font-family: $font-kr;
+    word-break: keep-all;
+
+    .read_head {
+        text-align: center;
+        background: #585858;
+        
+        .read_title {
+            width: 622px;
+            display: inline-block;
+            margin: 32px 0;
+
+            @media #{$pad} {
+                margin: 20px 0 24px;
+                width: auto;
+            }
+
+            .sub_title {
+                font-size: 35px;
+                display: block;
+                color: #fff;
+                font-weight: 700;
+                padding: 0px;
+                height: auto;
+                line-height: inherit;
+                margin-bottom: 10px;
+
+                @media #{$pad} {
+                    height: 43px;
+                    line-height: 43px;
+                    font-size: 29px;
+                    margin-right: 0px;
+                    margin-bottom: 6px;
+                }
+            }
+        }
+
+        .head_search {
+            display: block;
+            position: relative;
+
+            @media #{$pad} {
+                display: block;
+                width: 340px;
+                text-align: left;
+            }
+
+            @media #{$phone} {
+                width: 240px;
+            }
+
+            .head_input {
+                width: 70%;
+                height: 35px;
+                border: 1px solid #000;
+                padding: 0 13px;
+        
+                @media #{$pad} {
+                  width: 90%;
+                }
+        
+                @media #{$phone} {
+                  width: 85%;
+                }
+            }
+
+            .head_input_btn {
+                position: absolute;
+                top: 15px;
+                background-color: #000;
+                background-position: 50% 50%;
+                background-repeat: no-repeat;
+                border: 1px solid #000;
+                width: 35px;
+                height: 33px;
+                box-sizing: unset;
+                margin-left: -4px;
+                text-indent: -9999px;
+                cursor: pointer;
+            }
+        }
+    }
+
+    .file_list_wrapper {
+        width: 675px;
+        max-width: 1046px;
+        margin: 0 auto;
+        position: relative;
+        box-sizing: border-box;
+
+        @media #{$pad} {
+        width: auto;
+        margin-left: 20px;
+        margin-right: 20px;
+        }
+
+        .file_box {
+            margin-bottom: 178px;
+
+            .file_inner {
+                margin-top: 41px;
+
+                .type01 {
+                    border-top: 0px;
+
+                    .file_inner_tit{
+                        font-size: 20px;
+                        color: black;
+                        font-weight: bold;
+                        line-height: 29px;
+                        border-bottom: 3px solid black;
+                        padding: 0 0 5px 10px;
+                        text-align: center;
+                    }
+
+                    table {
+                        width: 100%;
+                    }
+                }
+
+                tbody {
+                    tr {
+                        td {
+                            .file_list_accordian {
+                                .file_list_wrap {
+                                    border-bottom: 1px solid $theme-color3;
+
+                                    .subject {
+                                        padding: 23px 0;
+                                        padding-left: 10px;
+                                        position: relative;
+                                        padding-right: 55px;
+
+                                        a {
+                                            cursor: pointer;
+                                        }
+
+                                        .file_list_contents {
+                                            text-align: justify;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                .file_list_subject {
+                    font-size: 15px;
+                    color: #000;
+                    font-weight: bold;
+                }
+
+                p {
+                    margin: 0;
+                    padding: 0;
+                    word-break: break-all;
+                }
+            }
+        }
+    }
+}
