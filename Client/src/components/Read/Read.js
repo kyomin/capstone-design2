@@ -23,9 +23,35 @@ class Read extends Component{
         // state 변수들 정의
         this.state = 
         {
-            fileList: [],   // 서버로부터 불러오는 파일 리스트
+            fileList: [
+                {
+                    fileName: 'sample1',
+                    fileType: 'txt',
+                    fileSize: '1',
+                    submitTime: '2019-12-01'
+                },
+                {
+                    fileName: 'sample2',
+                    fileType: 'txt',
+                    fileSize: '2',
+                    submitTime: '2019-12-02'
+                },
+                {
+                    fileName: 'sample3',
+                    fileType: 'txt',
+                    fileSize: '3',
+                    submitTime: '2019-12-03'
+                },
+                {
+                    fileName: 'sample4',
+                    fileType: 'txt',
+                    fileSize: '4',
+                    submitTime: '2019-12-04'
+                }
+            ],   // 서버로부터 불러오는 파일 리스트
             userID: '',  // 사용자로부터 입력받는 유저 아이디
-            
+            whosPage: '',   // 현재 누구의 파일을 읽어서 온 페이지인가?    
+
             // query string을 object화 한다.
             parsingObj: getParams(window.location.href)
         }
@@ -42,7 +68,8 @@ class Read extends Component{
         // userID가 params에 담겨 온다면
         if(this.state.parsingObj.userID !== undefined) {
             this.setState({
-                userID: this.state.parsingObj.userID
+                userID: this.state.parsingObj.userID,
+                whosPage: this.state.parsingObj.userID
             }, () => {
                 // userID의 길이가 0이 아니라면 불러오기 실행
                 if(this.state.userID.length > 0)
@@ -77,9 +104,10 @@ class Read extends Component{
             this.state.parsingObj
             );
 
-            // userID 재 셋팅
+            // userID 재 셋팅 및 현재 누구의 페인지인가 정보도 셋팅
             this.setState({
-                userID: this.state.parsingObj.userID
+                userID: this.state.parsingObj.userID,
+                whosPage: this.state.parsingObj.userID
             }, () => {
                 // userID의 길이가 0이 아니라면 불러오기 실행
                 if(this.state.userID.length > 0)
@@ -102,6 +130,7 @@ class Read extends Component{
     handleRead = () => {
         if(this.state.userID.length > 0)
         {
+            
             // GET 메소드로 클라우드로 요청을 보낸다.
             fetch(
                 `${constants.URL_BACK}/read?userID=${this.state.userID}`,
@@ -187,16 +216,56 @@ class Read extends Component{
                         <div className="type01">
                             {/* 대상 유저 아이디 */}
                             <div className="file_inner_tit">
-                                {this.state.userID.length>0 ? 
-                                this.state.userID
+                                { this.state.whosPage.length>0 ?
+                                this.state.whosPage
                                     + "'s file list" : ''
                                 }
                             </div>
                             {/* 대상 유저의 파일들 */}
                             <table>
-                                <MakeFileList
-                                    fileList={this.state.fileList}
-                                />
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                        <div className="file_list_accordian">
+                                            <div className="file_list_wrap">
+                                                <div className="subject">
+                                                    File Name
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </td>
+                                        <td>
+                                        <div className="file_list_accordian">
+                                            <div className="file_list_wrap">
+                                                <div className="subject">
+                                                    File Type
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </td>
+                                        <td>
+                                        <div className="file_list_accordian">
+                                            <div className="file_list_wrap">
+                                                <div className="subject">
+                                                    File Size
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </td>
+                                        <td>
+                                        <div className="file_list_accordian">
+                                            <div className="file_list_wrap">
+                                                <div className="subject">
+                                                    Submit Time
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </td>
+                                    </tr>
+                                    <MakeFileList
+                                        fileList={this.state.fileList}
+                                    />
+                                </tbody>
                             </table>
                         </div>
                     </div>
