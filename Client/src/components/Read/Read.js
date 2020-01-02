@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import swal from 'sweetalert';
+import axios from 'axios';
 
 import MakeFileList from '../MakeFileList/MakeFileList';
 import * as constants from "../../constants.js";
@@ -23,32 +24,7 @@ class Read extends Component{
         // state 변수들 정의
         this.state = 
         {
-            fileList: [
-                {
-                    fileName: 'sample1',
-                    fileType: 'txt',
-                    fileSize: '1',
-                    submitTime: '2019-12-01'
-                },
-                {
-                    fileName: 'sample2',
-                    fileType: 'txt',
-                    fileSize: '2',
-                    submitTime: '2019-12-02'
-                },
-                {
-                    fileName: 'sample3',
-                    fileType: 'txt',
-                    fileSize: '3',
-                    submitTime: '2019-12-03'
-                },
-                {
-                    fileName: 'sample4',
-                    fileType: 'txt',
-                    fileSize: '4',
-                    submitTime: '2019-12-04'
-                }
-            ],   // 서버로부터 불러오는 파일 리스트
+            fileList: [],   // 서버로부터 불러오는 파일 리스트
             userID: '',  // 사용자로부터 입력받는 유저 아이디
             whosPage: '',   // 현재 누구의 파일을 읽어서 온 페이지인가?    
 
@@ -59,12 +35,6 @@ class Read extends Component{
 
     // 처음 그려질 때 한 번만!
     componentDidMount = () => {
-
-        console.log(
-            "parsingObj in componentDidMount : ",
-            this.state.parsingObj
-        );
-
         // userID가 params에 담겨 온다면
         if(this.state.parsingObj.userID !== undefined) {
             this.setState({
@@ -93,17 +63,10 @@ class Read extends Component{
    componentDidUpdate(prevProps, prevState) {
        // props에 변화가 생겼다면
        if(prevProps != this.props) {
-        console.log("this is componentDidUpdate");
-
         this.setState({
         // query string을 재 object화 한다.
           parsingObj: getParams(window.location.href)
         }, () => {
-            console.log(
-            "parsingObj in ComponentDidUpdate : ",
-            this.state.parsingObj
-            );
-
             // userID 재 셋팅 및 현재 누구의 페인지인가 정보도 셋팅
             this.setState({
                 userID: this.state.parsingObj.userID,
@@ -131,30 +94,15 @@ class Read extends Component{
         if(this.state.userID.length > 0)
         {
             
-            // GET 메소드로 클라우드로 요청을 보낸다.
-            fetch(
-                `${constants.URL_BACK}/read?userID=${this.state.userID}`,
-                {
-                  method: "GET",
-                  headers: {
-                    "Content-Type": "application/json"
-                  }
-                }
-            )
-            .then(response => response.json())
-            .then(response => {
-                console.log("response : ", response);
-    
-                // 서버에서 전달한 리스트 받기
-                this.setState(
-                {
-                    fileList: response.fileList 
+            axios.get(`${constants.URL_BACK}/read?userID=${this.state.userID}`)
+            .then(res => {
+                this.setState({
+                    fileList: res.data 
                 });
             })
             .catch(err => {
-                swal("", "불러오기 실패!", "error");
                 console.log(err);
-            });
+            })
 
         } else{
             swal("", "ID를 입력해주십시오!", "error");
@@ -264,9 +212,18 @@ class Read extends Component{
                                     </tr>
                                     <MakeFileList
                                         fileList={this.state.fileList}
+                                        userID={this.state.parsingObj.userID}
                                     />
                                 </tbody>
                             </table>
+                            <div className="center_div">
+                            <Link to="/">
+                            <button
+                                className="white_btn">
+                                취소
+                            </button>
+                            </Link>
+                            </div>
                         </div>
                     </div>
                 </div>

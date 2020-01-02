@@ -14,7 +14,7 @@
     "react-scripts": "3.0.0",
     "sass-loader": "^8.0.0",
     "styled-components": "^4.4.1",
-    "superagent": "^5.1.1",
+    "superagent": "^5.1.2",
     "sweetalert": "^2.1.2"
   },
   "scripts": {

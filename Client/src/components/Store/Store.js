@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import swal from 'sweetalert';
+import axios from 'axios';
 
 // 수시로 변동되는 BACK_URL을 상수로 정의한 것을 받아온다.
 import * as constants from "../../constants.js";
@@ -21,8 +22,11 @@ class Store extends Component
       {
         // Store
         userID : '',
-        file : null,
-        fileInfo : {}
+        fileName: '',
+        fileSize: '',
+        fileType: '',
+        fileContents: '',
+        file: ''
       };
   }
 
@@ -31,37 +35,29 @@ class Store extends Component
   {
     var file = e.target.files[0];
 
+    this.setState({
+      file: file
+    });
+
     // 파일 내용을 읽기 위한 객체 참조 변수
     var read = new FileReader();
 
-    /*
-      이 객체에는 파일 이름, 파일 사이즈, 파일 타입, 파일 내용물이 담긴다.
-    */
-    var fileObj = {
-      name : file.name,
-      size : file.size,
-      type : file.type
-    };
-
-    read.readAsBinaryString(file);
+    read.readAsText(file);
 
     read.onload = e => {
-
-      fileObj['contents'] = e.target.result;
     
+      this.setState({
+        fileContents: e.target.result
+      });
     }
-
-    console.log(fileObj);
 
     this.setState(
       {
-        file : file,
-        fileInfo : fileObj
+        fileName: file.name,
+        fileSize: file.size,
+        fileType: file.type
       }
-    )
-    
-    console.log(e.target.files);
-    console.log(e.target.files[0]);
+    );
   }
 
   
@@ -81,63 +77,54 @@ class Store extends Component
       var curruntTime = new Date().toString();
 
       // 요일 DD MM YYYY HH:MM:SS의 형태만을 추출하기 위한 작업.
-      var timeStamp = curruntTime.substr(0, 24);
+      var timeStamp = curruntTime.substr(0, 25);
+      timeStamp = timeStamp.trim();
 
-      // 현재 시간의 문자열 잘 처리되었나 콘솔로 찍어보기
-      console.log(timeStamp);
       
       /*
-        fileInfo, date, ID를 담은 폼 데이터를 이용하여 해시 값 추출!
+        file 정보들, date, ID를 담은 폼 데이터를 이용하여 해시 값 추출!
       */
-      var hash = sha256(this.state.userID + timeStamp + JSON.stringify(this.state.fileInfo));
-
-      // 해시 값 추출이 잘 되었나 콘솔로 찍어보기
-      console.log(hash);
-
-      // 서버로 보낼 폼 데이터 변수를 선언한다.
-      const formData = new FormData();
-
-      // 폼 데이터에 값들 담기!
-      formData.append("file", this.state.file); // 파일 원본
-      formData.append("fileName", this.state.fileInfo.name);  // 파일 이름
-      formData.append("fileSize", this.state.fileInfo.size);  // 파일 크기
-      formData.append("fileType", this.state.fileInfo.type);  // 파일 타입
-      formData.append("date", timeStamp); // 업로드 날짜
-      formData.append("ID", this.state.userID); // 유저 아이디
-      formData.append("hash", hash);  // 해시 값
+      var hash = sha256(this.state.userID + timeStamp + 
+        this.state.fileName + this.state.fileType + 
+        this.state.fileSize + this.state.fileContents);
       
 
-      // 폼 데이터 콘솔로 찍어보기 => 잘 찍힌다
-      console.log(formData.get('file'));
-      console.log(formData.get('fileName'));
-      console.log(formData.get('fileSize'));
-      console.log(formData.get('fileType'));
-      console.log(formData.get('date'));
-      console.log(formData.get('ID'));
-      console.log(formData.get('hash'));
+      let headers = new Headers();
 
-      fetch(`${constants.URL_BACK}/upload`, {
-        method: "POST", // 메소드는 POST
-        headers: { },
-        body: formData  // body에 폼 데이터를 담아서 보낸다.
-      })
-      .then(response => response.json())
-      .then(response => {
-        if (response.message === "SAVE_SUCCESS") {
-          swal("", "파일 저장이 완료되었습니다.", "success");
-        } else {
-          swal("", "파일 저장에 실패했습니다.", "error");
+      headers.append('Content-Type', 'application/json');
+      headers.append('Accept', 'application/json');
+
+      headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
+      headers.append('Access-Control-Allow-Credentials', 'true');
+
+      headers.append('GET', 'POST', 'OPTIONS');
+
+    
+      axios.post(`${constants.URL_BACK}/store`, {
+        body: {
+          userID: this.state.userID,
+          timeStamp: timeStamp,
+          hashValue: hash,
+          fileName: this.state.fileName,
+          fileSize: this.state.fileSize,
+          fileType: this.state.fileType,
+          fileContents: this.state.fileContents
         }
+      },
+        {
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        }
+      )
+      .then((res) => {
+        swal("", "파일 저장 성공!", "success")
+        .then(() => {
+          window.location.reload();
+        });
       })
-      .catch(err => {
-        swal("", "파일 저장에 실패했습니다.", "error");
+      .catch((err) => {
         console.log(err);
-      });
-
-    } else {
-      swal("", "파일을 업로드 하십시오", "error");
+      })
     }
-
   }
 
   render() {
