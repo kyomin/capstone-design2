@@ -35,7 +35,7 @@ const confirmFileIntegrity = (userId, timeStamp) => {
 
                     resolve({
                         confirmFileIntegritySuccess: true,
-                        message: "원본 파일이 변조 되지 않았습니다!"
+                        message: "원본 파일의 무결성이 보장되었습니다!"
                     });
                 });
             });

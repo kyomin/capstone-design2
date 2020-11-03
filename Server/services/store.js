@@ -28,7 +28,7 @@ const storeFile = (req) => {
         hashIngredients(ingredients)
         .then((hashedIngreditents) => {
             req.body.hashValue = hashedIngreditents;
-            console.log("req.body : ", req.body);
+            
             Cloud.create(req.body)
             .then(async () => {
                 /* 
@@ -40,11 +40,9 @@ const storeFile = (req) => {
                     timeStamp: req.body.timeStamp,
                     hashValue: req.body.hashValue
                 };
-                console.log("클라우드 저장 성공");
-                console.log("edge data : ", edgeData);
+                
                 return Edge.create(edgeData)
                 .then(() => {
-                    console.log("엣지 저장 성공");
                     return resolve({ storeCloudSuccess: true });  
                 })
                 .catch((err) => {
