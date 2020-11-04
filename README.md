@@ -17,7 +17,7 @@
 1. root 디렉토리(/)의 `npm install` 명령어는 Server Dependencies를 위한 것입니다.   
 2. client 디렉토리(/Client)의 `npm install` 명령어는 Client Dependencies를 위한 것입니다.   
 3. DB Connection은 `sequelize` 모듈을 사용했습니다.   
-/erver/config/config.json 파일 내에 연결 정보를 기입합니다.   
+/Server/config/config.json 파일 내에 연결 정보를 기입합니다.   
 로컬 작업이라 예시로 제 정보를 넣었습니다.   
 참고하시면 됩니다.   
    
