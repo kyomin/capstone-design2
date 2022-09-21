@@ -20,7 +20,7 @@
   "homepage": "https://github.com/kyomin/capstone-design2#readme",
   "devDependencies": {
     "concurrently": "^5.3.0",
-    "nodemon": "^2.0.6"
+    "nodemon": "^2.0.20"
   },
   "dependencies": {
     "bcrypt": "^5.0.0",
